@@ -1,6 +1,11 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.4.30'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.4.30'
+
+    id 'application'
+    id 'jacoco'
+    id 'org.sonarqube' version '3.1'
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
 }
 
 group = groupId
@@ -47,15 +52,23 @@ dependencies {
     testCompile 'io.projectreactor:reactor-test'
 }
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "11"
+mainClassName = "com.arrival.crypto.bitcoinanalyzer.BitcoinAnalyzerApplicationKt"
+jar.enabled = false
+shadowJar {
+    mergeServiceFiles()
+    getArchiveClassifier().set(null)
+    manifest {
+        attributes 'Main-Class': mainClassName
+        attributes 'App-Version': artifactVersion
+    }
 }
 
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "11"
+artifacts {
+    archives shadowJar
 }
 
-tasks.withType(Test) {
+test {
+    failFast = true
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
@@ -63,8 +76,27 @@ tasks.withType(Test) {
     }
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+}
+
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
     options.incremental = true
     options.fork = true
+}
+
+javadoc {
+    options.encoding = "UTF-8"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "11"
 }

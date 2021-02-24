@@ -1,5 +1,7 @@
 # Arrival Test Assigment
 
+## Description
+
 Implement RESTful web service that will analyze bitcoin blockchain block hashes. In addition to the common flow the service should have a proper error handling.
 The service should expose an endpoint which will do the following:
 
