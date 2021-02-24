@@ -1,0 +1,70 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.30'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.4.30'
+}
+
+group = groupId
+version = artifactVersion
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+configurations {
+    all {
+        resolutionStrategy {
+            cacheChangingModulesFor(1000, 'seconds') // refresh cache for snapshots
+        }
+    }
+    springBom
+    compileOnly.extendsFrom(springBom)
+    implementation.extendsFrom(springBom)
+    annotationProcessor.extendsFrom(springBom)
+    testAnnotationProcessor.extendsFrom(springBom)
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    springBom enforcedPlatform('org.springframework.boot:spring-boot-starter-parent:2.4.3')
+
+    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
+
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Kotlin
+    compile 'com.fasterxml.jackson.module:jackson-module-kotlin'
+    compile 'io.projectreactor.kotlin:reactor-kotlin-extensions'
+    compile 'org.jetbrains.kotlin:kotlin-reflect'
+    compile 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'io.projectreactor:reactor-test'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+    options.incremental = true
+    options.fork = true
+}
