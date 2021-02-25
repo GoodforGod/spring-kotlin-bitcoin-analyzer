@@ -1,10 +1,73 @@
 package com.arrival.crypto.bitcoinanalyzer.btc
 
+import com.arrival.crypto.bitcoinanalyzer.model.btc.BtcBlock
+import com.arrival.crypto.bitcoinanalyzer.model.btc.BtcMultiResponse
+import com.arrival.crypto.bitcoinanalyzer.model.btc.BtcSingleResponse
+import org.springframework.core.ParameterizedTypeReference
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.stereotype.Component
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.server.ResponseStatusException
+import reactor.core.publisher.Flux
+import java.time.Duration
+
 /**
- * Description
+ * @see <a href="https://btc.com/api-doc">API</a>
  *
  * @author Anton Kurako (GoodforGod)
  * @since 24.2.2021
  */
+@Component
 class BtcClient {
+
+    /**
+     * Block height on 25.3.2021 is 672_117, so this limit will do just fine next 100 years
+     */
+    private val maxBlockHeight: Long = 9_999_999
+    private val pathBlock: String = "/block/"
+    private val client: WebClient = WebClient.create("https://chain.api.btc.com/v3");
+
+    fun getBlocks(height: Long): Flux<BtcBlock> {
+        if(height < 1 || height > maxBlockHeight)
+            return Flux.empty()
+
+        val type = ParameterizedTypeReference.forType<BtcSingleResponse<BtcBlock>>(BtcSingleResponse::class.java)
+        return client.get()
+            .uri(pathBlock + height)
+            .acceptCharset(Charsets.UTF_8)
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .onStatus({it == HttpStatus.BAD_REQUEST}, { throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Malformed block number.") })
+            .onStatus({it != HttpStatus.OK}, { throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown error occurred on client side.") })
+            .bodyToFlux(type)
+            .timeout(Duration.ofSeconds(5))
+            .map{ it.data }
+    }
+
+    fun getBlocks(heights: Collection<Long>): Flux<BtcBlock> {
+        if(heights.isEmpty())
+            return Flux.empty();
+        if(heights.size == 1)
+            return getBlocks(heights.first())
+
+        val path = heights.asSequence()
+            .filter { it in 1 until maxBlockHeight }
+            .joinToString(",", pathBlock)
+
+        if(path == pathBlock)
+            return Flux.empty()
+
+        val type = ParameterizedTypeReference.forType<BtcMultiResponse<BtcBlock>>(BtcMultiResponse::class.java)
+        return client.get()
+            .uri(path)
+            .acceptCharset(Charsets.UTF_8)
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .onStatus({it == HttpStatus.BAD_REQUEST}, { throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Malformed block number.") })
+            .onStatus({it != HttpStatus.OK}, { throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown error occurred on client side.") })
+            .bodyToFlux(type)
+            .timeout(Duration.ofSeconds(5))
+            .flatMapIterable { it.data }
+    }
 }

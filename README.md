@@ -7,7 +7,7 @@ flow the service should have a proper error handling.
 The service should expose an endpoint which will do the following:
 
 - Accepts a block heights range. Maximum blocks count per request is 100
-- Queries the data from the Bitcoin blockchain API (https://btc.com/api-doc#Block is a good way to go with) for the given block height range
+- Queries the data from the [Bitcoin blockchain API](https://btc.com/api-doc#Block) is a good way to go with for the given block height range
 - Calculates the longest sub-string hash found in more than one block hashes. Just to clarify, 
   that block hash is a 256-bit number stored as a big-endian hexadecimal string. And by the "sub-string" we should understand a contiguous sequence of numbers
 
