@@ -15,14 +15,21 @@ import reactor.core.publisher.Mono
  */
 @Qualifier("bitcoin")
 @Service
-class BitcoinService(@Qualifier("bitcoin") private val provider: BlockchainProvider,
-                     private val calculator: BlockHashCalculator) : BlockchainService{
+class BitcoinService(
+    @Qualifier("bitcoin") private val provider: BlockchainProvider,
+    private val calculator: BlockHashCalculator
+) : BlockchainService {
 
     override fun getLongestSubHashByHeightRange(from: Long, to: Long): Mono<String> {
-        if(from < 0)
+        if (from < 0)
             return Mono.error(ResponseStatusException(HttpStatus.BAD_REQUEST, "'from' block height can't be 0 or less"))
-        if(to < from)
-            return Mono.error(ResponseStatusException(HttpStatus.BAD_REQUEST, "'to' block height can't be less than 'from'"))
+        if (to < from)
+            return Mono.error(
+                ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "'to' block height can't be less than 'from'"
+                )
+            )
 
         // actually we can always take N/2 block cause each block has prev hash, its hash and next block hash
         var count = to

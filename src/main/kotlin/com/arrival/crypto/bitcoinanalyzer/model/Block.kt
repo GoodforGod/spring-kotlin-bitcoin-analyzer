@@ -10,7 +10,8 @@ abstract class Block(
     open val height: Long,
     open val size: Int,
     open val timestamp: Int,
-    open val hash: String): Comparable<Block> {
+    open val hash: String
+) : Comparable<Block> {
 
     open val hashDecoded: String by lazy { Integer.parseInt(hash, 16).toString() }
 
