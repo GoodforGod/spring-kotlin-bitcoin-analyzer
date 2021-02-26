@@ -7,7 +7,7 @@ package com.arrival.crypto.bitcoinanalyzer.model
  * @since 25.2.2021
  */
 abstract class Block(
-    open val number: Long,
+    open val height: Long,
     open val size: Int,
     open val timestamp: Int,
     open val hash: String): Comparable<Block> {
@@ -15,7 +15,7 @@ abstract class Block(
     open val hashDecoded: String by lazy { Integer.parseInt(hash, 16).toString() }
 
     override fun compareTo(other: Block): Int {
-        return number.compareTo(other.number)
+        return height.compareTo(other.height)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -24,16 +24,16 @@ abstract class Block(
 
         other as Block
 
-        if (number != other.number) return false
+        if (height != other.height) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        return number.hashCode()
+        return height.hashCode()
     }
 
     override fun toString(): String {
-        return "Block(number=$number, size=$size, timestamp=$timestamp, hash='$hash')"
+        return "Block(height=$height, size=$size, timestamp=$timestamp, hash='$hash')"
     }
 }

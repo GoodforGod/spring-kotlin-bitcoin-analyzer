@@ -1,5 +1,7 @@
-package com.arrival.crypto.bitcoinanalyzer.btc
+package com.arrival.crypto.bitcoinanalyzer.client
 
+import com.arrival.crypto.bitcoinanalyzer.error.BlockchainClientException
+import com.arrival.crypto.bitcoinanalyzer.error.BlockchainParamException
 import com.arrival.crypto.bitcoinanalyzer.model.btc.BtcBlock
 import com.arrival.crypto.bitcoinanalyzer.model.btc.BtcMultiResponse
 import com.arrival.crypto.bitcoinanalyzer.model.btc.BtcSingleResponse
@@ -29,45 +31,58 @@ class BtcClient {
     private val client: WebClient = WebClient.create("https://chain.api.btc.com/v3");
 
     fun getBlocks(height: Long): Flux<BtcBlock> {
-        if(height < 1 || height > maxBlockHeight)
+        if (height < 1 || height > maxBlockHeight)
             return Flux.empty()
 
-        val type = ParameterizedTypeReference.forType<BtcSingleResponse<BtcBlock>>(BtcSingleResponse::class.java)
+        val type = object : ParameterizedTypeReference<BtcSingleResponse<BtcBlock>>() {}
         return client.get()
             .uri(pathBlock + height)
             .acceptCharset(Charsets.UTF_8)
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
-            .onStatus({it == HttpStatus.BAD_REQUEST}, { throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Malformed block number.") })
-            .onStatus({it != HttpStatus.OK}, { throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown error occurred on client side.") })
+            .onStatus(
+                { it == HttpStatus.BAD_REQUEST },
+                { throw BlockchainParamException("Malformed block height: $height") })
+            .onStatus(
+                { it != HttpStatus.OK },
+                { throw BlockchainClientException("Unknown error occurred on client side for height: $height") })
             .bodyToFlux(type)
             .timeout(Duration.ofSeconds(5))
-            .map{ it.data }
+            .flatMap {
+                if (it.data == null)
+                    Flux.empty()
+                else
+                    Flux.just(it.data)
+            }
     }
 
     fun getBlocks(heights: Collection<Long>): Flux<BtcBlock> {
-        if(heights.isEmpty())
+        if (heights.isEmpty())
             return Flux.empty();
-        if(heights.size == 1)
+        if (heights.size == 1)
             return getBlocks(heights.first())
 
         val path = heights.asSequence()
             .filter { it in 1 until maxBlockHeight }
             .joinToString(",", pathBlock)
 
-        if(path == pathBlock)
+        if (path == pathBlock)
             return Flux.empty()
 
-        val type = ParameterizedTypeReference.forType<BtcMultiResponse<BtcBlock>>(BtcMultiResponse::class.java)
+        val type = object : ParameterizedTypeReference<BtcMultiResponse<BtcBlock>>() {}
         return client.get()
             .uri(path)
             .acceptCharset(Charsets.UTF_8)
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
-            .onStatus({it == HttpStatus.BAD_REQUEST}, { throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Malformed block number.") })
-            .onStatus({it != HttpStatus.OK}, { throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown error occurred on client side.") })
+            .onStatus(
+                { it == HttpStatus.BAD_REQUEST },
+                { throw BlockchainParamException("Malformed block heights: $heights") })
+            .onStatus(
+                { it != HttpStatus.OK },
+                { throw BlockchainClientException("Unknown error occurred on client side for heights: $heights") })
             .bodyToFlux(type)
             .timeout(Duration.ofSeconds(5))
-            .flatMapIterable { it.data }
+            .flatMapIterable { it.data ?: emptyList() }
     }
 }

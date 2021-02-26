@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @since 24.2.2021
  */
 data class BtcBlock(
-    override var number: Long,
+    override var height: Long,
     override val timestamp: Int,
     override val hash: String,
     override val size: Int,
@@ -32,9 +32,9 @@ data class BtcBlock(
     @JsonProperty("tx_count")
     val txCount: Int,
     @JsonProperty("reward_block")
-    val rewardBlock: Int,
+    val rewardBlock: Long,
     @JsonProperty("reward_fees")
     val rewardFees: Int,
     @JsonProperty("created_at")
     val createdAt: Int
-) : Block(number, size, timestamp, hash)
+) : Block(height, size, timestamp, hash)

@@ -11,5 +11,5 @@ data class BtcMultiResponse<T>(
     val errorNumber: Int,
     val message: String,
     val status: String,
-    val data: List<T>
+    val data: List<T>?
 )
