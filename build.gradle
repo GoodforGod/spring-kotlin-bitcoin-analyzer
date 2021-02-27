@@ -52,7 +52,7 @@ dependencies {
     testCompile 'io.projectreactor:reactor-test'
 }
 
-mainClassName = "com.arrival.crypto.bitcoinanalyzer.BitcoinAnalyzerApplicationKt"
+mainClassName = "com.arrival.crypto.bitcoinanalyzer.ApplicationKt"
 jar.enabled = false
 shadowJar {
     mergeServiceFiles()
