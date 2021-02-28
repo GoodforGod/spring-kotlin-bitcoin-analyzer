@@ -11,5 +11,5 @@ import reactor.core.publisher.Mono
  */
 interface BlockHashCalculator {
 
-    fun getLongestSubHash(blocks: Collection<Block>): Mono<String>
+    fun getLongestSubHash(blocks: Collection<Block>): Mono<String?>
 }

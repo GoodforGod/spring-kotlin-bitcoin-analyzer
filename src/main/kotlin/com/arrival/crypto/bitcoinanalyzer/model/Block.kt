@@ -6,7 +6,7 @@ package com.arrival.crypto.bitcoinanalyzer.model
  * @author Anton Kurako (GoodforGod)
  * @since 25.2.2021
  */
-abstract class Block(
+open class Block(
     open val height: Long,
     open val size: Int,
     open val timestamp: Int,

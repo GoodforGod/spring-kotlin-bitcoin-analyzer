@@ -1,12 +1,13 @@
 package com.arrival.crypto.bitcoinanalyzer.service.impl
 
+import com.arrival.crypto.bitcoinanalyzer.ext.longestSubstring
 import com.arrival.crypto.bitcoinanalyzer.model.Block
 import com.arrival.crypto.bitcoinanalyzer.service.BlockHashCalculator
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 /**
- * decoded sub hash block calculator service
+ * Block's decoded sub hash calculator service
  *
  * @author Anton Kurako (GoodforGod)
  * @since 25.2.2021
@@ -14,7 +15,15 @@ import reactor.core.publisher.Mono
 @Service
 class DecodedBlockHashCalculator : BlockHashCalculator {
 
-    override fun getLongestSubHash(blocks: Collection<Block>): Mono<String> {
-        TODO("Not yet implemented")
+    override fun getLongestSubHash(blocks: Collection<Block>): Mono<String?> {
+        return Mono.fromCallable {
+            blocks.map { b ->
+                blocks.filter { ib -> ib != b }
+                    .map { ib -> ib.hashDecoded.longestSubstring(b.hashDecoded) }
+                    .maxByOrNull { hash -> hash?.length ?: 0 }
+            }
+                .filter { hash -> !hash.isNullOrEmpty() }
+                .maxByOrNull { hash -> hash?.length ?: 0 }
+        }
     }
 }
