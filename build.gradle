@@ -8,11 +8,24 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '6.0.0'
 }
 
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
 group = groupId
 version = artifactVersion
 
 sourceCompatibility = 11
 targetCompatibility = 11
+
+sonarqube {
+    properties {
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        property 'sonar.organization', 'goodforgod'
+        property 'sonar.projectKey', 'GoodforGod_bitcoin-analyzer'
+    }
+}
 
 configurations {
     all {
@@ -25,11 +38,6 @@ configurations {
     implementation.extendsFrom(springBom)
     annotationProcessor.extendsFrom(springBom)
     testAnnotationProcessor.extendsFrom(springBom)
-}
-
-repositories {
-    mavenLocal()
-    mavenCentral()
 }
 
 dependencies {
