@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus
  * @since 26.2.2021
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@WebMvcTest(BitcoinBlockController::class)
 class BitcoinBlockControllerTests(@Autowired val restTemplate: TestRestTemplate) : Assertions() {
 
     @Test

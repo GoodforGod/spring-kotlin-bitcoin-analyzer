@@ -20,7 +20,7 @@ class DecodedBlockHashCalculator : BlockHashCalculator {
             blocks.map { b ->
                 blocks.filter { ib -> ib != b }
                     .map { ib -> ib.hashDecoded.longestSubstring(b.hashDecoded) }
-                    .maxByOrNull { hash -> hash?.length ?: 0 }
+                    .maxByOrNull { hash -> hash.length }
             }
                 .filter { hash -> !hash.isNullOrEmpty() }
                 .maxByOrNull { hash -> hash?.length ?: 0 }

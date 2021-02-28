@@ -27,8 +27,8 @@ data class BtcBlock(
     @JsonProperty("next_block_hash")
     val nextBlockHash: String?,
     @JsonProperty("pool_difficulty")
-    val poolDifficulty: Int,
-    val difficulty: Int,
+    val poolDifficulty: Long,
+    val difficulty: Long,
     @JsonProperty("tx_count")
     val txCount: Int,
     @JsonProperty("reward_block")

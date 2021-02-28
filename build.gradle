@@ -68,7 +68,8 @@ artifacts {
 }
 
 test {
-    failFast = true
+    failFast = false
+
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"

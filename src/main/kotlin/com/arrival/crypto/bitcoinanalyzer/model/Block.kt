@@ -1,5 +1,7 @@
 package com.arrival.crypto.bitcoinanalyzer.model
 
+import java.math.BigInteger
+
 /**
  * Abstract Blockchain Block
  *
@@ -13,7 +15,12 @@ open class Block(
     open val hash: String
 ) : Comparable<Block> {
 
-    open val hashDecoded: String by lazy { Integer.parseInt(hash, 16).toString() }
+    open val hashDecoded: String by lazy {
+        if (hash.isEmpty())
+            return@lazy ""
+        else
+            BigInteger(hash, 16).toString()
+    }
 
     override fun compareTo(other: Block): Int {
         return height.compareTo(other.height)
