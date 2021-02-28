@@ -32,7 +32,13 @@ Implementation requirements:
 - Kotlin, Spring
 - Also, pay attention to code quality and tests
 
-# API
+## Run
+
+```
+./gradlew run
+```
+
+## API
 
 Service provides:
 - **GET** */bitcoin/block/subhash* endpoint with **from** and **to** parameters for range selection of blocks height.
