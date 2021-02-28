@@ -11,6 +11,7 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Flux
+import reactor.core.scheduler.Scheduler
 import java.time.Duration
 
 /**
@@ -61,7 +62,7 @@ class BtcClient {
         if (heights.size == 1)
             return getBlocks(heights.first())
 
-        val path = heights.asSequence()
+        val path = heights.asSequence().distinct()
             .filter { it in 1 until maxBlockHeight }
             .joinToString(",", pathBlock)
 
@@ -81,7 +82,7 @@ class BtcClient {
                 { it != HttpStatus.OK },
                 { throw BlockchainClientException("Unknown error occurred on client side for heights: $heights") })
             .bodyToFlux(type)
-            .timeout(Duration.ofSeconds(5))
+            .timeout(Duration.ofSeconds(10))
             .flatMapIterable { it.data ?: emptyList() }
     }
 }

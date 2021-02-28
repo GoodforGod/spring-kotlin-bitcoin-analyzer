@@ -20,12 +20,12 @@ class DecodedBlockHashCalculator : BlockHashCalculator {
             return Mono.empty()
 
         return Mono.fromCallable {
-            blocks.map { b ->
-                blocks.filter { ib -> ib != b }
-                    .map { ib -> ib.hashDecoded.longestSubstring(b.hashDecoded) }
-                    .maxByOrNull { hash -> hash.length }
-            }
-                .filter { hash -> !hash.isNullOrEmpty() }
+            blocks.distinct()
+                .map { b ->
+                    blocks.filter { ib -> ib != b }
+                        .map { ib -> ib.hashDecoded.longestSubstring(b.hashDecoded) }
+                        .maxByOrNull { hash -> hash.length }
+                }
                 .maxByOrNull { hash -> hash?.length ?: 0 }
                 .orEmpty()
         }
