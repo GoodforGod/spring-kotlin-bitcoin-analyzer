@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
  * @author GoodforGod
  * @since 27.02.2021
  */
-class StringExtensionsTests : Assertions(){
+class StringExtensionsTests : Assertions() {
 
     @Test
     fun `substring found when exist`() {

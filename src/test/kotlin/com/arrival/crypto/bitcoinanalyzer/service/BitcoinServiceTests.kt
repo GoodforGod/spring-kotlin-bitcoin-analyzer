@@ -10,7 +10,7 @@ import java.time.Duration
  * @since 26.2.2021
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class BitcoinServiceTests(val service: BlockchainService) : Assertions(){
+class BitcoinServiceTests(val service: BlockchainService) : Assertions() {
 
     @Test
     fun `calculate sub hash for block height range existing`() {
