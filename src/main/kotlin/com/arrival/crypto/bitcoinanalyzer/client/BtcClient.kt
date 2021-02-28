@@ -27,7 +27,7 @@ class BtcClient {
      */
     private val maxBlockHeight: Long = 9_999_999
     private val pathBlock: String = "/block/"
-    private val client: WebClient = WebClient.create("https://chain.api.btc.com/v3");
+    private val client: WebClient = WebClient.create("https://chain.api.btc.com/v3")
 
     fun getBlocks(height: Long): Flux<BtcBlock> {
         if (height < 1 || height > maxBlockHeight)
@@ -57,17 +57,18 @@ class BtcClient {
 
     fun getBlocks(heights: Collection<Long>): Flux<BtcBlock> {
         if (heights.isEmpty())
-            return Flux.empty();
-        if (heights.size == 1)
-            return getBlocks(heights.first())
-
-        val path = heights.asSequence().distinct()
-            .filter { it in 1 until maxBlockHeight }
-            .joinToString(",", pathBlock)
-
-        if (path == pathBlock)
             return Flux.empty()
 
+        val filtered = heights.asSequence().distinct()
+            .filter { it in 1 until maxBlockHeight }
+            .toSet()
+
+        if (filtered.isEmpty())
+            return Flux.empty()
+        if (filtered.size == 1)
+            return getBlocks(filtered.first())
+
+        val path = filtered.joinToString(",", pathBlock)
         val type = object : ParameterizedTypeReference<BtcMultiResponse<BtcBlock>>() {}
         return client.get()
             .uri(path)

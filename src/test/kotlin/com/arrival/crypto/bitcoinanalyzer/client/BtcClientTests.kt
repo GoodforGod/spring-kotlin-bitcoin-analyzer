@@ -30,9 +30,27 @@ class BtcClientTests(@Autowired val client: BtcClient) : Assertions() {
     }
 
     @Test
+    fun `get block by empty heights`() {
+        val blocks = client.getBlocks(listOf()).collectList().block(Duration.ofSeconds(5))
+        assertTrue(blocks.isEmpty())
+    }
+
+    @Test
     fun `get block by height more than limit`() {
         val blocks = client.getBlocks(99_999_999).collectList().block(Duration.ofSeconds(5))
         assertTrue(blocks.isEmpty())
+    }
+
+    @Test
+    fun `get blocks by multiple heights more than limit`() {
+        val blocks = client.getBlocks(listOf(99_999_999L, 89_999_999L)).collectList().block(Duration.ofSeconds(5))
+        assertTrue(blocks.isEmpty())
+    }
+
+    @Test
+    fun `get blocks by duplicate heights`() {
+        val blocks = client.getBlocks(listOf(999L, 999L, 999L)).collectList().block(Duration.ofSeconds(5))
+        assertEquals(1, blocks.size)
     }
 
     @Test
