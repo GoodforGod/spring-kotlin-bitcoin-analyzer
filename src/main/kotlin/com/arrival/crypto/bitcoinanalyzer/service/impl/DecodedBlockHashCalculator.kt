@@ -16,19 +16,14 @@ import reactor.core.publisher.Mono
 class DecodedBlockHashCalculator : BlockHashCalculator {
 
     override fun getLongestSubHash(blocks: Collection<Block>): Mono<String> {
-        if (blocks.size < 2)
-            return Mono.empty()
-
-        return Mono.fromCallable {
-            blocks.distinct()
-                .map { b ->
-                    blocks.filter { ib -> ib != b }
-                        .map { ib -> ib.hashDecoded.longestSubstring(b.hashDecoded) }
-                        .maxByOrNull { hash -> hash.length }
-                }
-                .maxByOrNull { hash -> hash?.length ?: 0 }
-                .orEmpty()
-        }
-            .filter { s -> !s.isNullOrEmpty() }
+        return if (blocks.size >= 2)
+            Mono.fromCallable {
+                blocks.distinct()
+                    .map { b -> b.hashDecoded }
+                    .longestSubstring()
+            }
+                .filter { s -> s.isNotEmpty() }
+        else
+            Mono.empty()
     }
 }

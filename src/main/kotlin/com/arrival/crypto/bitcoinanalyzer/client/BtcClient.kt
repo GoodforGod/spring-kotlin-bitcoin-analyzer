@@ -2,6 +2,7 @@ package com.arrival.crypto.bitcoinanalyzer.client
 
 import com.arrival.crypto.bitcoinanalyzer.error.BlockchainClientException
 import com.arrival.crypto.bitcoinanalyzer.error.BlockchainParamException
+import com.arrival.crypto.bitcoinanalyzer.error.ClientOverflowException
 import com.arrival.crypto.bitcoinanalyzer.model.btc.BtcBlock
 import com.arrival.crypto.bitcoinanalyzer.model.btc.BtcMultiResponse
 import com.arrival.crypto.bitcoinanalyzer.model.btc.BtcSingleResponse
@@ -43,10 +44,13 @@ class BtcClient {
                 { it == HttpStatus.BAD_REQUEST },
                 { throw BlockchainParamException("Malformed block height: $height") })
             .onStatus(
+                { it == HttpStatus.TOO_MANY_REQUESTS },
+                { throw ClientOverflowException("Blockchain data provider had too many requests and temporary limited access") })
+            .onStatus(
                 { it != HttpStatus.OK },
                 { throw BlockchainClientException("Unknown error occurred on client side for height: $height") })
             .bodyToFlux(type)
-            .timeout(Duration.ofSeconds(5))
+            .timeout(Duration.ofSeconds(10))
             .flatMap {
                 if (it.data == null)
                     Flux.empty()
@@ -78,6 +82,9 @@ class BtcClient {
             .onStatus(
                 { it == HttpStatus.BAD_REQUEST },
                 { throw BlockchainParamException("Malformed block heights: $heights") })
+            .onStatus(
+                { it == HttpStatus.TOO_MANY_REQUESTS },
+                { throw ClientOverflowException("Blockchain data provider had too many requests and temporary limited access") })
             .onStatus(
                 { it != HttpStatus.OK },
                 { throw BlockchainClientException("Unknown error occurred on client side for heights: $heights") })

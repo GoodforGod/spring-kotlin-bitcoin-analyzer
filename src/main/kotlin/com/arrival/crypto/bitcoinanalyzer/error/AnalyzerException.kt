@@ -16,3 +16,5 @@ open class AnalyzerException(status: HttpStatus, reason: String?, cause: Throwab
 class BlockchainClientException(message: String) : AnalyzerException(HttpStatus.BAD_REQUEST, message)
 
 class BlockchainParamException(message: String) : AnalyzerException(HttpStatus.BAD_REQUEST, message)
+
+class ClientOverflowException(message: String) : AnalyzerException(HttpStatus.TOO_MANY_REQUESTS, message)
