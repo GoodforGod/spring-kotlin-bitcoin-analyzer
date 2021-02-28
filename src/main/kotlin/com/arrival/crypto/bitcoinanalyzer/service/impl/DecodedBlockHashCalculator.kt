@@ -15,7 +15,10 @@ import reactor.core.publisher.Mono
 @Service
 class DecodedBlockHashCalculator : BlockHashCalculator {
 
-    override fun getLongestSubHash(blocks: Collection<Block>): Mono<String?> {
+    override fun getLongestSubHash(blocks: Collection<Block>): Mono<String> {
+        if (blocks.size < 2)
+            return Mono.empty()
+
         return Mono.fromCallable {
             blocks.map { b ->
                 blocks.filter { ib -> ib != b }
@@ -24,6 +27,8 @@ class DecodedBlockHashCalculator : BlockHashCalculator {
             }
                 .filter { hash -> !hash.isNullOrEmpty() }
                 .maxByOrNull { hash -> hash?.length ?: 0 }
+                .orEmpty()
         }
+            .filter { s -> !s.isNullOrEmpty() }
     }
 }

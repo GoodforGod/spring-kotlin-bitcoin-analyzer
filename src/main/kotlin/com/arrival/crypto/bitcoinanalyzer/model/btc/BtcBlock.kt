@@ -11,17 +11,17 @@ import com.fasterxml.jackson.annotation.JsonProperty
  */
 data class BtcBlock(
     override var height: Long,
-    override val timestamp: Int,
+    override val timestamp: Long,
     override val hash: String,
     override val size: Int,
     val version: Int,
     val bits: Int,
-    val nonce: Int,
+    val nonce: Long,
     val confirmations: Int,
     @JsonProperty("mrkl_root")
     val mrklRoot: String,
     @JsonProperty("curr_max_timestamp")
-    val currMaxTimestamp: Int,
+    val currMaxTimestamp: Long,
     @JsonProperty("prev_block_hash")
     val prevBlockHash: String?,
     @JsonProperty("next_block_hash")
@@ -34,7 +34,7 @@ data class BtcBlock(
     @JsonProperty("reward_block")
     val rewardBlock: Long,
     @JsonProperty("reward_fees")
-    val rewardFees: Int,
+    val rewardFees: Long,
     @JsonProperty("created_at")
-    val createdAt: Int
+    val createdAt: Long
 ) : Block(height, size, timestamp, hash)

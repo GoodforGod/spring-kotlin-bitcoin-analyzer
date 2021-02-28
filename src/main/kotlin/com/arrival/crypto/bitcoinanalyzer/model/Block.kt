@@ -11,7 +11,7 @@ import java.math.BigInteger
 open class Block(
     open val height: Long,
     open val size: Int,
-    open val timestamp: Int,
+    open val timestamp: Long,
     open val hash: String
 ) : Comparable<Block> {
 

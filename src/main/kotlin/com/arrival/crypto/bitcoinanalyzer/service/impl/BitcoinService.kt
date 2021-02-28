@@ -33,7 +33,7 @@ class BitcoinService(
 
         // actually we can always take N/2 block cause each block has prev hash, its hash and next block hash
         var count = to
-        val range = generateSequence { (count--).takeIf { it > from } }.toList()
+        val range = generateSequence { (count--).takeIf { it >= from } }.toList()
         return provider.getBlocks(range)
             .collectList()
             .flatMap { calculator.getLongestSubHash(it) }

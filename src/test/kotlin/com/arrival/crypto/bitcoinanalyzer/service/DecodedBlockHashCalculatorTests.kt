@@ -29,11 +29,12 @@ class DecodedBlockHashCalculatorTests(@Autowired val calculator: DecodedBlockHas
     @Test
     fun `calculate non existing sub hash for blocks`() {
         val blocks = listOf(
-            Block(646941L, 1, 1, "0000000000000000000ecb9d7b39484bab8bde23859ce59a22ffef46735fe95f"),
-            Block(646942L, 1, 2, "0000000000000000000c3460e3fc89c6a20fcb4f35cbd1fe1f99d1a9ed160868")
+            Block(646941L, 1, 1, "62"),
+            Block(646942L, 1, 2, "15")
         )
 
-        val subHashByRange = calculator.getLongestSubHash(blocks).block(Duration.ofSeconds(5))
-        assertNull(subHashByRange)
+        val def = "DEF CAUSE EMPTY"
+        val subHashByRange = calculator.getLongestSubHash(blocks).defaultIfEmpty(def).block(Duration.ofSeconds(5))
+        assertEquals(def, subHashByRange)
     }
 }

@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class BitcoinAnalyzerApplication
+class Application
 
 fun main(args: Array<String>) {
-    runApplication<BitcoinAnalyzerApplication>(*args)
+    runApplication<Application>(*args)
 }
