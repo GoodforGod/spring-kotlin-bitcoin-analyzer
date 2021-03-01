@@ -45,7 +45,7 @@ Service provides:
 
 Request example:
 ```text
-http://localhost:8080/bitcoin/blockl/subhash?from=646940&to=646941
+http://localhost:8080/bitcoin/block/subhash?from=646940&to=646941
 ```
 
 Response example:
