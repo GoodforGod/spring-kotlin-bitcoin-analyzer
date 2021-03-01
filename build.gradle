@@ -2,10 +2,10 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.4.30'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.4.30'
 
-    id 'application'
     id 'jacoco'
     id 'org.sonarqube' version '3.1'
-    id 'com.github.johnrengelman.shadow' version '6.0.0'
+    id 'org.springframework.boot' version '2.4.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
 repositories {
@@ -27,22 +27,7 @@ sonarqube {
     }
 }
 
-configurations {
-    all {
-        resolutionStrategy {
-            cacheChangingModulesFor(1000, 'seconds') // refresh cache for snapshots
-        }
-    }
-    springBom
-    compileOnly.extendsFrom(springBom)
-    implementation.extendsFrom(springBom)
-    annotationProcessor.extendsFrom(springBom)
-    testAnnotationProcessor.extendsFrom(springBom)
-}
-
 dependencies {
-    springBom enforcedPlatform('org.springframework.boot:spring-boot-starter-parent:2.4.3')
-
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
 
@@ -58,21 +43,6 @@ dependencies {
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'io.projectreactor:reactor-test'
-}
-
-mainClassName = "com.arrival.crypto.bitcoinanalyzer.ApplicationKt"
-jar.enabled = false
-shadowJar {
-    mergeServiceFiles()
-    getArchiveClassifier().set(null)
-    manifest {
-        attributes 'Main-Class': mainClassName
-        attributes 'App-Version': artifactVersion
-    }
-}
-
-artifacts {
-    archives shadowJar
 }
 
 test {

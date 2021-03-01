@@ -4,6 +4,8 @@ import com.arrival.crypto.bitcoinanalyzer.error.BlockchainParamException
 import com.arrival.crypto.bitcoinanalyzer.service.BlockHashCalculator
 import com.arrival.crypto.bitcoinanalyzer.service.BlockchainProvider
 import com.arrival.crypto.bitcoinanalyzer.service.BlockchainService
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
@@ -19,6 +21,8 @@ class BitcoinService(
     private val calculator: BlockHashCalculator
 ) : BlockchainService {
 
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
+
     override fun getLongestSubHashByHeightRange(from: Long, to: Long): Mono<String> {
         if (from < 0)
             return Mono.error(BlockchainParamException("'from' block height can't be 0 or less."))
@@ -26,6 +30,8 @@ class BitcoinService(
             return Mono.error(BlockchainParamException("'from' block height can't be equal 'to' block height."))
         if (to < from)
             return Mono.error(BlockchainParamException("'to' block height can't be less than 'from'."))
+
+        logger.info("Executing request in rage from $from up to $to")
 
         // actually we can always take N/2 block cause each block has prev hash, its hash and next block hash
         var count = to

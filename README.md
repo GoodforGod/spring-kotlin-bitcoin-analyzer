@@ -35,7 +35,7 @@ Implementation requirements:
 ## Run
 
 ```
-./gradlew run
+./gradlew bootRun
 ```
 
 ## API
