@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
+import reactor.core.scheduler.Schedulers
 import java.time.Duration
 
 /**
@@ -49,5 +50,6 @@ class BitcoinBlockController(@Qualifier("bitcoin") private val service: Blockcha
                     )
                 )
             )
+            .subscribeOn(Schedulers.boundedElastic())
     }
 }
