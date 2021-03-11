@@ -1,18 +1,18 @@
 package com.crypto.bitcoinanalyzer.service
 
-import com.arrival.crypto.bitcoinanalyzer.service.impl.BitcoinProvider
+import com.crypto.bitcoinanalyzer.client.BtcClient
+import com.crypto.bitcoinanalyzer.service.impl.BitcoinProvider
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import java.time.Duration
 
 /**
  * @author Anton Kurako (GoodforGod)
  * @since 26.2.2021
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class BitcoinProviderTests(@Autowired val provider: BitcoinProvider) : Assertions() {
+class BitcoinProviderTests : Assertions() {
+
+    private val provider: BitcoinProvider = BitcoinProvider(BtcClient())
 
     @Test
     fun `get block by height less 0`() {

@@ -1,7 +1,7 @@
 package com.crypto.bitcoinanalyzer.controller
 
-import com.arrival.crypto.bitcoinanalyzer.model.dto.ErrorResponse
-import com.arrival.crypto.bitcoinanalyzer.model.dto.HashResponse
+import com.crypto.bitcoinanalyzer.model.dto.ErrorResponse
+import com.crypto.bitcoinanalyzer.model.dto.HashResponse
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

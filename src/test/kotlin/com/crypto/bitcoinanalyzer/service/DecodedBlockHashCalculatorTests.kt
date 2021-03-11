@@ -1,19 +1,18 @@
 package com.crypto.bitcoinanalyzer.service
 
-import com.arrival.crypto.bitcoinanalyzer.model.Block
-import com.arrival.crypto.bitcoinanalyzer.service.impl.DecodedBlockHashCalculator
+import com.crypto.bitcoinanalyzer.model.Block
+import com.crypto.bitcoinanalyzer.service.impl.DecodedBlockHashCalculator
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import java.time.Duration
 
 /**
  * @author Anton Kurako (GoodforGod)
  * @since 26.2.2021
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class DecodedBlockHashCalculatorTests(@Autowired val calculator: DecodedBlockHashCalculator) : Assertions() {
+class DecodedBlockHashCalculatorTests : Assertions() {
+
+    private val calculator: BlockHashCalculator = DecodedBlockHashCalculator()
 
     @Test
     fun `calculate existing sub hash for blocks`() {
