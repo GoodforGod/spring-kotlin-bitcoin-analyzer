@@ -2,6 +2,7 @@ package com.crypto.bitcoinanalyzer.service
 
 import com.crypto.bitcoinanalyzer.model.Block
 import com.crypto.bitcoinanalyzer.service.impl.DecodedBlockHashCalculator
+import com.crypto.bitcoinanalyzer.service.impl.SubstringService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.Duration
@@ -12,7 +13,7 @@ import java.time.Duration
  */
 class DecodedBlockHashCalculatorTests : Assertions() {
 
-    private val calculator: BlockHashCalculator = DecodedBlockHashCalculator()
+    private val calculator: BlockHashCalculator = DecodedBlockHashCalculator(SubstringService())
 
     @Test
     fun `calculate existing sub hash for blocks`() {
