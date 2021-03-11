@@ -1,7 +1,7 @@
 package com.crypto.bitcoinanalyzer.service
 
-import com.arrival.crypto.bitcoinanalyzer.error.BlockchainParamException
-import com.arrival.crypto.bitcoinanalyzer.service.impl.BitcoinService
+import com.crypto.bitcoinanalyzer.error.BlockchainParamException
+import com.crypto.bitcoinanalyzer.service.impl.BitcoinService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,7 +12,7 @@ import java.time.Duration
  * @author Anton Kurako (GoodforGod)
  * @since 26.2.2021
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 class BitcoinServiceTests(@Autowired val service: BitcoinService) : Assertions() {
 
     @Test
