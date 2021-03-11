@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Mono
-import reactor.core.scheduler.Schedulers
 import java.time.Duration
 
 /**
@@ -39,7 +38,6 @@ class BitcoinBlockController(@Qualifier("bitcoin") private val service: Blockcha
             return Mono.error(ResponseStatusException(BAD_REQUEST, "Range can't be more 100 blocks per request."))
 
         return service.getLongestSubHashByHeightRange(from.toLong(), to.toLong())
-            .filter { it.isNotEmpty() }
             .map { hash -> HashResponse(hash) }
             .timeout(Duration.ofSeconds(30))
             .switchIfEmpty(
@@ -50,6 +48,5 @@ class BitcoinBlockController(@Qualifier("bitcoin") private val service: Blockcha
                     )
                 )
             )
-            .subscribeOn(Schedulers.boundedElastic())
     }
 }
