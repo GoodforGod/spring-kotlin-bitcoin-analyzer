@@ -1,4 +1,4 @@
-# Arrival Test Assigment
+# Bitcoin Analyzer
 
 [![GitHub Action](https://github.com/goodforgod/bitcoin-analyzer/workflows/Java%20CI/badge.svg)](https://github.com/GoodforGod/bitcoin-analyzer/actions?query=workflow%3A%22Java+CI%22)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_bitcoin-analyzer&metric=alert_status)](https://sonarcloud.io/dashboard?id=GoodforGod_bitcoin-analyzer)
