@@ -9,7 +9,7 @@ import reactor.core.publisher.Flux
  * @author Anton Kurako (GoodforGod)
  * @since 24.2.2021
  */
-interface BlockchainProvider {
+interface BlockchainProvider<T : Block> {
 
-    fun getBlocks(heights: Collection<Long>): Flux<Block>
+    fun getBlocks(heights: Collection<Long>): Flux<T>
 }

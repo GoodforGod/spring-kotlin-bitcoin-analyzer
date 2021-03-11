@@ -1,6 +1,7 @@
 package com.crypto.bitcoinanalyzer.service.impl
 
 import com.crypto.bitcoinanalyzer.error.BlockchainParamException
+import com.crypto.bitcoinanalyzer.model.btc.BtcBlock
 import com.crypto.bitcoinanalyzer.service.BlockHashCalculator
 import com.crypto.bitcoinanalyzer.service.BlockchainProvider
 import com.crypto.bitcoinanalyzer.service.BlockchainService
@@ -17,7 +18,7 @@ import reactor.core.publisher.Mono
 @Qualifier("bitcoin")
 @Service
 class BitcoinService(
-    @Qualifier("bitcoin") private val provider: BlockchainProvider,
+    @Qualifier("bitcoin") private val provider: BlockchainProvider<BtcBlock>,
     private val calculator: BlockHashCalculator
 ) : BlockchainService {
 

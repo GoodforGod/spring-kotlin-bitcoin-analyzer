@@ -12,7 +12,7 @@ import java.time.Duration
  * @author Anton Kurako (GoodforGod)
  * @since 26.2.2021
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest
 class BitcoinServiceTests(@Autowired val service: BitcoinService) : Assertions() {
 
     @Test
